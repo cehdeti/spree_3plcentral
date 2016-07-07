@@ -10,16 +10,12 @@ Spree::Shipment.class_eval do
         earliest_ship_date: today,
         ship_cancel_date: today
       },
-      ship_to: {
-        name: "#{address.firstname} #{address.lastname}",
-        company_name: address.company,
-        address: address.to_threeplcentral,
-        phone_number1: address.phone,
+      ship_to: address.to_threeplcentral.merge(
         email_address1: order.email,
         shipping_instructions: {
           mode: shipping_methods.first.name
         }
-      },
+      ),
       order_line_items: order.line_items.map(&:to_threeplcentral),
       fulfillment_info: {
         fulfill_inv_shipping_and_handling: order.shipment_total,
