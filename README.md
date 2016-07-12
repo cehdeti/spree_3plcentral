@@ -7,23 +7,25 @@ Introduction goes here.
 
 1. Add this extension to your Gemfile with this line:
   ```ruby
-  gem 'spree_3plcentral', github: '[your-github-handle]/spree_3plcentral', branch: 'X-X-stable'
+  gem 'spree_3plcentral', github: 'cehdeti/spree_3plcentral', branch: 'master'
   ```
 
-  The `branch` option is important: it must match the version of Spree you're using.
-  For example, use `3-1-stable` if you're using Spree `3-1-stable` or any `3.1.x` version.
+2. This gem relies on the [`3pl_central`](https://github.com/adamrunner/3pl_central) gem, which is not published to rubygems, so you'll need to add that to your `Gemfile` too:
+  ```ruby
+  gem '3pl_central', github: 'adamrunner/3pl_central'
+  ```
 
-2. Install the gem using Bundler:
+3. Install the gem using Bundler:
   ```ruby
   bundle install
   ```
 
-3. Copy & run migrations
+4. Copy & run migrations
   ```ruby
   bundle exec rails g spree_3plcentral:install
   ```
 
-4. Restart your server
+5. Restart your server
 
   If your server was running, restart it so that it can find the assets properly.
 
