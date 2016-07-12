@@ -1,7 +1,7 @@
 Spree 3PLCentral
 ================
 
-Introduction goes here.
+Integrates a Spree store with the [3PLCentral fulfillment service](http://3plcentral.com).
 
 ## Installation
 
