@@ -14,6 +14,11 @@ Integrates a Spree store with the [3PLCentral fulfillment service](http://3plcen
   ```ruby
   gem '3pl_central', github: 'adamrunner/3pl_central'
   ```
+Currently, it actually uses a fork of that library with some bug fixes, so use
+this instead:
+  ```ruby
+  gem '3pl_central', github: 'cehdeti/3pl_central'
+  ```
 
 3. Install the gem using Bundler:
   ```ruby

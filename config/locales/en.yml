@@ -1,8 +1,17 @@
 en:
   spree:
     threeplcentral: 3PLCentral
-    threeplcentral_settings: 3PLCentral Settings
+
     threeplcentral_create: Create orders in 3PLCentral
+
     threeplcentral_api_error: "Could not connect to 3PLCentral API. Error: %{message}"
+
+    threeplcentral_settings: 3PLCentral Settings
     threeplcentral_api_credentials: API Credentials
     threeplcentral_preferences: Additional Settings
+    threeplcentral_api_key: API Key
+    threeplcentral_login: Login
+    threeplcentral_password: Password
+    threeplcentral_user_login_id: User Login ID
+    threeplcentral_customer_id: Customer ID
+    threeplcentral_default_facility_id: Default Facility ID

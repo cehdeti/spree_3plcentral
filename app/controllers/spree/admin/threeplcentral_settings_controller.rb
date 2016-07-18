@@ -8,6 +8,7 @@ module Spree
         :threeplcentral_user_login_id
       ].freeze
       PREFERENCE_FIELDS = [
+        :threeplcentral_customer_id,
         :threeplcentral_default_facility_id
       ].freeze
 

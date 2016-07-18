@@ -25,6 +25,7 @@ module Spree3PLCentral
         c.login = Spree::Config.threeplcentral_login
         c.password = Spree::Config.threeplcentral_password
         c.three_pl_id = Spree::Config.threeplcentral_user_login_id
+        c.customer_id = Spree::Config.threeplcentral_customer_id
         c.default_facility_id = Spree::Config.threeplcentral_default_facility_id
       end
     end
