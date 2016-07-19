@@ -30,7 +30,7 @@ Spree::Shipment.class_eval do
       ship_to: address.to_threeplcentral.merge(
         email_address1: order.email,
       ),
-      shipping_instructions: shipping_methods.first.to_threeplcentral,
+      shipping_instructions: shipping_method.to_threeplcentral,
       order_line_items: order.line_items.with_3plcentral.map do |line_item|
         { order_line_item: line_item.to_threeplcentral }
       end,
