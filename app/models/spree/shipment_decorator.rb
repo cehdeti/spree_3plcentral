@@ -25,7 +25,7 @@ Spree::Shipment.class_eval do
   def to_threeplcentral
     {
       trans_info: {
-        reference_num: order.number
+        reference_num: "#{Spree::Config.threeplcentral_user_login_id}-#{order.number}"
       },
       ship_to: address.to_threeplcentral.merge(
         email_address1: order.email,
