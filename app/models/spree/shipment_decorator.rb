@@ -1,7 +1,7 @@
 Spree::Shipment.class_eval do
   scope :with_3plcentral, -> { joins(:shipping_methods).merge(Spree::ShippingMethod.with_3plcentral) }
   scope :sent_to_3plcentral, -> { where(sent_to_threeplcentral: true) }
-  scope :not_sent_to_3plcentral, -> { where.not(sent_to_threeplcentral: true) }
+  scope :not_sent_to_3plcentral, -> { where(sent_to_threeplcentral: [false, nil]) }
   scope :send_to_3plcentral, -> { where('1 = 1').merge(with_3plcentral).merge(not_sent_to_3plcentral) }
 
   def send_to_3plcentral
