@@ -1,8 +1,10 @@
 Spree::Address.class_eval do
   def to_threeplcentral
+    name = "#{firstname} #{lastname}"
+
     {
-      name: "#{firstname} #{lastname}",
-      company_name: company || 'None',
+      name: name,
+      company_name: company || name || "None",
       phone_number1: phone,
       address: {
         address1: address1, address2: address2, city: city, state: state.abbr,
