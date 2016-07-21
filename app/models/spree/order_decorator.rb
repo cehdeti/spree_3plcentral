@@ -11,6 +11,6 @@ Spree::Order.class_eval do
   alias_method_chain :finalize!, :create_3plcentral_order
 
   def threeplcentral_reference_number
-    "#{Spree::Config.threeplcentral_user_login_id}-#{number}"
+    "#{Spree::Config.threeplcentral_customer_id}-#{number}"
   end
 end
