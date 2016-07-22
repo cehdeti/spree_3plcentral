@@ -25,7 +25,7 @@ Spree::Shipment.class_eval do
   def threeplcentral_order(reload = false)
     if reload || !instance_variable_defined?(:@threeplcentral_order)
       @threeplcentral_order = ThreePLCentral::Order
-        .find(reference_num: order.threeplcentral_reference_number)
+        .find(closed: 'Any', reference_num: order.threeplcentral_reference_number)
         .first
     end
 
