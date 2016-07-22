@@ -51,8 +51,9 @@ Spree::Shipment.class_eval do
   end
 
   def sync_3plcentral_state
-    return false unless threeplcentral_order && threeplcentral_order['tracking_number']
-    update!(tracking: threeplcentral_order['tracking_number'])
-    ship!
+    threeplcentral_order && \
+      threeplcentral_order['tracking_number'] && \
+      update(tracking: threeplcentral_order['tracking_number']) && \
+      ship!
   end
 end
