@@ -10,7 +10,8 @@ module Spree
       PREFERENCE_FIELDS = [
         :threeplcentral_customer_id,
         :threeplcentral_default_facility_id,
-        :threeplcentral_reference_number_prefix
+        :threeplcentral_reference_number_prefix,
+        :threeplcentral_billing_code
       ].freeze
 
       before_action :set_fields, :set_shipping_categories

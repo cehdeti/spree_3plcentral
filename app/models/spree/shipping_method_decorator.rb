@@ -4,7 +4,8 @@ Spree::ShippingMethod.class_eval do
   def to_threeplcentral
     {
       carrier: carrier || 'N/A',
-      mode: admin_name
+      mode: admin_name,
+      billing_code: Spree::Config.threeplcentral_billing_code
     }
   end
 

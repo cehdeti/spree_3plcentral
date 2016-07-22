@@ -7,4 +7,5 @@ Spree::AppConfiguration.class_eval do
   preference :threeplcentral_customer_id, :integer
   preference :threeplcentral_default_facility_id, :integer
   preference :threeplcentral_reference_number_prefix, :string
+  preference :threeplcentral_billing_code, :string
 end
