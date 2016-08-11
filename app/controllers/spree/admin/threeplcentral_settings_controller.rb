@@ -40,6 +40,7 @@ module Spree
         @credential_fields = CREDENTIAL_FIELDS
         @preference_fields = PREFERENCE_FIELDS
         @fields = (@credential_fields + @preference_fields).freeze
+        @savon = ThreePLCentral.savon_config
       end
 
       def set_shipping_categories
