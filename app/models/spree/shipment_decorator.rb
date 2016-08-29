@@ -33,6 +33,13 @@ Spree::Shipment.class_eval do
   end
 
   def send_to_3plcentral
+    logger.debug "SENDING SHIPMENT TO 3PL CENTRAL"
+    if Rails.env=='development'
+      logger.debug "DONT SEND TO 3PL CENTRAL IN DEVELOPMENT"
+      update_column :sent_to_threeplcentral, true
+      return true
+    end
+
     begin
       response = ThreePLCentral::Order.create(to_threeplcentral)
     rescue => ex
