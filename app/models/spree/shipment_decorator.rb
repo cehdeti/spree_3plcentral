@@ -7,7 +7,7 @@ Spree::Shipment.class_eval do
   def to_threeplcentral
     {
       trans_info: {
-        reference_num: order.threeplcentral_reference_number,
+        reference_num: threeplcentral_reference_number,
       },
       ship_to: address.to_threeplcentral.merge(
         email_address1: order.email,
@@ -22,10 +22,14 @@ Spree::Shipment.class_eval do
     }
   end
 
+  def threeplcentral_reference_number
+    "#{Spree::Config.threeplcentral_reference_number_prefix}#{number}-#{id}"
+  end
+
   def threeplcentral_order(reload = false)
     if reload || !instance_variable_defined?(:@threeplcentral_order)
       @threeplcentral_order = ThreePLCentral::Order
-        .find(closed: 'Any', reference_num: order.threeplcentral_reference_number)
+        .find(closed: 'Any', reference_num: threeplcentral_reference_number)
         .first
     end
 
@@ -33,9 +37,10 @@ Spree::Shipment.class_eval do
   end
 
   def send_to_3plcentral
-    logger.debug "SENDING SHIPMENT TO 3PL CENTRAL"
-    if Rails.env=='development'
-      logger.debug "DONT SEND TO 3PL CENTRAL IN DEVELOPMENT"
+    logger.debug 'SENDING SHIPMENT TO 3PL CENTRAL'
+
+    if Rails.env.development?
+      logger.debug 'DONT SEND TO 3PL CENTRAL IN DEVELOPMENT'
       update_column :sent_to_threeplcentral, true
       return true
     end
@@ -47,14 +52,14 @@ Spree::Shipment.class_eval do
       return false
     end
 
-    unless response.body[:int32] == '1'
+    if response.body[:int32] == '1'
+      update_column :sent_to_threeplcentral, true
+      true
+    else
       update_column :sent_to_threeplcentral, false
       logger.error("Error creating order in 3PLCentral: #{response.body}")
-      return false
+      false
     end
-
-    update_column :sent_to_threeplcentral, true
-    true
   end
 
   def sync_3plcentral_state
