@@ -23,7 +23,7 @@ Spree::Shipment.class_eval do
   end
 
   def threeplcentral_reference_number
-    "#{Spree::Config.threeplcentral_reference_number_prefix}#{number}-#{id}"
+    "#{Spree::Config.threeplcentral_reference_number_prefix}#{order.number}-#{number}"
   end
 
   def threeplcentral_order(reload = false)
