@@ -13,7 +13,7 @@ Spree::Shipment.class_eval do
         email_address1: order.email,
       ),
       shipping_instructions: shipping_method.to_threeplcentral,
-      order_line_items: order.line_items.with_3plcentral.map do |line_item|
+      order_line_items: line_items.map do |line_item|
         { order_line_item: line_item.to_threeplcentral }
       end,
       fulfillment_info: {

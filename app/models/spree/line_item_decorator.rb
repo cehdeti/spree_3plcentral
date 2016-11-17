@@ -1,6 +1,4 @@
 Spree::LineItem.class_eval do
-  scope :with_3plcentral, -> { joins(product: :shipping_category).merge(Spree::ShippingCategory.with_3plcentral) }
-
   def to_threeplcentral
     {
       SKU: variant.sku,
