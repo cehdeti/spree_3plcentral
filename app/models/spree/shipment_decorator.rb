@@ -37,28 +37,10 @@ Spree::Shipment.class_eval do
   end
 
   def send_to_3plcentral
-    logger.debug 'SENDING SHIPMENT TO 3PL CENTRAL'
-
-    if Rails.env.development?
-      logger.debug 'DONT SEND TO 3PL CENTRAL IN DEVELOPMENT'
-      update_column :sent_to_threeplcentral, true
-      return true
-    end
-
-    begin
-      response = ThreePLCentral::Order.create(to_threeplcentral)
-    rescue => ex
-      logger.error("Error creating order in 3PLCentral: #{ex.message}")
-      return false
-    end
-
-    if response.body[:int32] == '1'
-      update_column :sent_to_threeplcentral, true
-      true
-    else
-      update_column :sent_to_threeplcentral, false
-      logger.error("Error creating order in 3PLCentral: #{response.body}")
-      false
+    logger.tagged('3PLCentral') do
+      logger.debug 'Creating shipment record'
+      success = Rails.env.production? ? do_send_to_3plcentral : simulate_send_to_3plcentral
+      update_column :sent_to_threeplcentral, success
     end
   end
 
@@ -67,5 +49,22 @@ Spree::Shipment.class_eval do
       threeplcentral_order['tracking_number'] && \
       update(tracking: threeplcentral_order['tracking_number']) && \
       ship!
+  end
+
+  private
+
+  def do_send_to_3plcentral
+    response = ThreePLCentral::Order.create(to_threeplcentral)
+    success = response.body[:int32] == '1'
+    logger.error("Error creating shipment: #{response.body}") unless success
+    success
+  rescue => ex
+    logger.error("Error creating shipment: #{ex.message}")
+    false
+  end
+
+  def simulate_send_to_3plcentral
+    logger.debug("Not in production environment, skipping 3PLCentral shipment creation. Would have sent: #{to_threeplcentral}")
+    true
   end
 end
