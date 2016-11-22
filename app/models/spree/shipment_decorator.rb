@@ -2,7 +2,7 @@ Spree::Shipment.class_eval do
   scope :with_3plcentral, -> { joins(:shipping_methods).merge(Spree::ShippingMethod.with_3plcentral) }
   scope :sent_to_3plcentral, -> { where(sent_to_threeplcentral: true) }
   scope :not_sent_to_3plcentral, -> { where(sent_to_threeplcentral: [false, nil]) }
-  scope :send_to_3plcentral, -> { where('1 = 1').merge(with_3plcentral).merge(not_sent_to_3plcentral) }
+  scope :send_to_3plcentral, -> { distinct.merge(with_3plcentral).merge(not_sent_to_3plcentral) }
 
   def to_threeplcentral
     {
@@ -43,6 +43,7 @@ Spree::Shipment.class_eval do
       logger.debug 'Creating shipment record'
       success = Rails.env.production? ? do_send_to_3plcentral : simulate_send_to_3plcentral
       update_column :sent_to_threeplcentral, success
+      logger.debug 'Shipment record created'
     end
   end
 
