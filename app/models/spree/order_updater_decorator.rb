@@ -17,4 +17,8 @@ Spree::OrderUpdater.class_eval do
   def create_3plcentral_order
     order.shipments.send_to_3plcentral.each(&:send_to_3plcentral)
   end
+
+  def logger
+    order.try(:logger) || Rails.logger
+  end
 end
