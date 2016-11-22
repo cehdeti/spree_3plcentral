@@ -1,4 +1,6 @@
 Spree::Shipment.class_eval do
+  THREEPLCENTRAL_SUCCESS_RESPONSE = '1'.freeze
+
   scope :with_3plcentral, -> { joins(:shipping_methods).merge(Spree::ShippingMethod.with_3plcentral) }
   scope :sent_to_3plcentral, -> { where(sent_to_threeplcentral: true) }
   scope :not_sent_to_3plcentral, -> { where(sent_to_threeplcentral: [false, nil]) }
@@ -40,10 +42,9 @@ Spree::Shipment.class_eval do
     return if sent_to_threeplcentral
 
     logger.tagged('3PLCentral', "Order ##{order.number}", "Shipment ##{number}") do
-      logger.debug 'Creating shipment record'
+      logger.info 'Creating shipment record'
       success = Rails.env.production? ? do_send_to_3plcentral : simulate_send_to_3plcentral
       update_column :sent_to_threeplcentral, success
-      logger.debug 'Shipment record created'
     end
   end
 
@@ -57,17 +58,19 @@ Spree::Shipment.class_eval do
   private
 
   def do_send_to_3plcentral
-    response = ThreePLCentral::Order.create(to_threeplcentral)
-    success = response.body[:int32] == '1'
-    logger.error("Error creating shipment: #{response.body}") unless success
-    success
+    serialized = to_threeplcentral
+    logger.info("Sending shipment: #{serialized}")
+    response = ThreePLCentral::Order.create(serialized)
+    (response.body[:int32] == THREEPLCENTRAL_SUCCESS_RESPONSE).tap do |success|
+      logger.error("Error creating shipment: #{response.body}") unless success
+    end
   rescue => ex
     logger.error("Error creating shipment: #{ex.message}")
     false
   end
 
   def simulate_send_to_3plcentral
-    logger.debug("Not in production environment, skipping 3PLCentral shipment creation. Would have sent: #{to_threeplcentral}")
+    logger.debug("Not in production environment, skipping shipment creation. Would have sent: #{to_threeplcentral}")
     true
   end
 end
