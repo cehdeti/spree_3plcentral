@@ -15,9 +15,9 @@ Spree::Shipment.class_eval do
         email_address1: order.email,
       ),
       shipping_instructions: shipping_method.to_threeplcentral,
-      order_line_items: line_items.map do |line_item|
-        { order_line_item: line_item.to_threeplcentral }
-      end,
+      order_line_items: {
+        order_line_item: line_items.map(&:to_threeplcentral)
+      },
       fulfillment_info: {
         fulfill_inv_shipping_and_handling: order.shipment_total
       }
