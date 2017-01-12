@@ -6,6 +6,12 @@ Spree::Shipment.class_eval do
   scope :not_sent_to_3plcentral, -> { where(sent_to_threeplcentral: [false, nil]) }
   scope :send_to_3plcentral, -> { distinct.merge(with_3plcentral).merge(not_sent_to_3plcentral) }
 
+  def logger
+    rails_logger = Rails.logger
+    model_logger = super
+    model_logger.is_a?(rails_logger.class) ? model_logger : rails_logger
+  end
+
   def to_threeplcentral
     {
       trans_info: {
@@ -16,7 +22,14 @@ Spree::Shipment.class_eval do
       ),
       shipping_instructions: shipping_method.to_threeplcentral,
       order_line_items: {
-        order_line_item: line_items.map(&:to_threeplcentral)
+        order_line_item: manifest.map do |item|
+          {
+            SKU: item.line_item.variant.sku,
+            qty: item.quantity,
+            fulfillment_sale_price: item.line_item.price,
+            fulfillment_discount_amount: item.line_item.promo_total
+          }
+        end
       },
       fulfillment_info: {
         fulfill_inv_shipping_and_handling: order.shipment_total
@@ -58,7 +71,7 @@ Spree::Shipment.class_eval do
   private
 
   def do_send_to_3plcentral
-    serialized = to_threeplcentral
+    serialized = manifest.to_threeplcentral
     logger.info("Sending shipment: #{serialized}")
     response = ThreePLCentral::Order.create(serialized)
     (response.body[:int32] == THREEPLCENTRAL_SUCCESS_RESPONSE).tap do |success|
