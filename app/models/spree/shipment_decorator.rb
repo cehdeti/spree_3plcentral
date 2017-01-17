@@ -71,7 +71,7 @@ Spree::Shipment.class_eval do
   private
 
   def do_send_to_3plcentral
-    serialized = manifest.to_threeplcentral
+    serialized = to_threeplcentral
     logger.info("Sending shipment: #{serialized}")
     response = ThreePLCentral::Order.create(serialized)
     (response.body[:int32] == THREEPLCENTRAL_SUCCESS_RESPONSE).tap do |success|
