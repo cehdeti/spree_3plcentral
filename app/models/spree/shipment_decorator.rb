@@ -53,12 +53,10 @@ Spree::Shipment.class_eval do
 
   def send_to_3plcentral
     return if sent_to_threeplcentral
-
-    logger.tagged('3PLCentral', "Order ##{order.number}", "Shipment ##{number}") do
-      logger.info 'Creating shipment record'
-      success = Rails.env.production? ? do_send_to_3plcentral : simulate_send_to_3plcentral
-      update_column :sent_to_threeplcentral, success
-    end
+    logger.debug("3PLCentral Order ##{order.number} Shipment ##{number}")
+    logger.info 'Creating shipment record'
+    success = Rails.env.production? ? do_send_to_3plcentral : simulate_send_to_3plcentral
+    update_column :sent_to_threeplcentral, success
   end
 
   def sync_3plcentral_state
