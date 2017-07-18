@@ -23,8 +23,15 @@ Spree::Shipment.class_eval do
       shipping_instructions: shipping_method.to_threeplcentral,
       order_line_items: {
         order_line_item: manifest.map do |item|
+
+          sku = item.line_item.variant.sku
+
+          if item.part
+            sku = item.variant.sku
+          end
+
           {
-            SKU: item.line_item.variant.sku,
+            SKU: sku,
             qty: item.quantity,
             fulfillment_sale_price: item.line_item.price,
             fulfillment_discount_amount: item.line_item.promo_total
