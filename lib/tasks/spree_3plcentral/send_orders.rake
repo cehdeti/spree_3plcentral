@@ -3,7 +3,7 @@ namespace :spree_3plcentral do
   task send_orders: :environment do
     Rails.logger.debug '3PLCentral send orders: Starting send'
 
-    shipments = Spree::Shipment.with_3plcentral.ready.where(sent_to_threeplcentral:nil)
+    shipments = Spree::Shipment.with_3plcentral.ready.where(sent_to_threeplcentral: [nil, false])
     total = shipments.count
     Rails.logger.debug "3PLCentral send orders: Sending #{total} order(s)"
 
